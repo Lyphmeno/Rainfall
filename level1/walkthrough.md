@@ -16,15 +16,11 @@ level1
 *	So we get an endless loop here, let's do as usual
 	```console
 	root@DESKTOP-69N2SL4:~# scp -P 4242 level1@192.168.29.4:~/level1 .
-	root@DESKTOP-69N2SL4:~# ./getFunction.sh
+	root@DESKTOP-69N2SL4:~# ./getFunctions.sh
 	```
-*	When we take a look at the main it looks like I was wrong, the code use the function `gets` which led me to think that the program is reading the input (My mistake here, I should've at least tried to add something)
-	```console
-	level1@RainFall:~$ ./level1 
-	test
-	level1@RainFall:~$
-	```
-	As we can see it works well...
+*	When we take a look at the main it looks like I was wrong, the code use the function `gets()` which led me to think that the program is reading the input (My mistake here, I should've at least tried to add something)
+*	We also have another function called `run()`, this one uses `fwrite()`.
+*	Looking deeper into gdb, we can see that it takes $eax=`("Good... Wait what?\n")` and then it calls `system()` to execute `/bin/sh`
 *	So, now we are dealing with a [Buffer Overflow Attack](https://www.imperva.com/learn/application-security/buffer-overflow/)
 *	Here we can see the buffer is sized `80` bytes
 	```assembly
