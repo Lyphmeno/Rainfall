@@ -54,7 +54,7 @@ level1
 	```
 	Make sure to use `echo -e` if you don't use python print because the memory part won't be interpreted as binary data.
 *	The issue here is that the `/bin/sh` will shutdown because it is trying to read `STDIN`. We have to make sure cat, there is many ways to make sure it keeps reading 
-	```
+	```console
 	level1@RainFall:~$ (cat /tmp/exploit; cat) | ./level1
 	level1@RainFall:~$ cat /tmp/exploit - | ./level1
 	Good... Wait what?
