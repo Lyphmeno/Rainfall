@@ -26,7 +26,7 @@ level1
 	```assembly
 	sub    $0x50,%esp
 	```
-*	Instead of using python I made a little [program](source/randomStr.sh) in shell to get a random string of `x` char
+*	Instead of using i used a generated string from this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to make sure the address is ok
 	```console
 	level1@RainFall:~$ echo str > /tmp/exlpoit
 	```
