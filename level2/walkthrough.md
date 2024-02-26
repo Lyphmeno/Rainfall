@@ -13,7 +13,7 @@ level2
 *	Let's take a look at the code
 	```console
 	root@DESKTOP-69N2SL4:~# scp -P 4242 level2@192.168.29.4:~/level2 .
-	root@DESKTOP-69N2SL4:~/42/Ghub/Rainfall/level2/source# ./getFunctions.sh 
+	root@DESKTOP-69N2SL4:~# ./getFunctions.sh 
 	Executable files in the current directory:
 	[1] ./level2
 	Enter the number of the executable file you want to analyze: 1
