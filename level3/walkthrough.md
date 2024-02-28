@@ -17,7 +17,7 @@ level3
 	[1] ./level3
 	Enter the number of the executable file you want to analyze: 1
 	```
-*	My script created the [disas.s](source/disas.s) file which will make understanding this code a bit easier. We can see the main function calls the `p` one. This function uses `gets` but once again it looks protected
+*	My script created the [disas.s](source/disas.s) file which will make understanding this code a bit easier. We can see the main function calls the `v` one. This function uses `gets` but once again it looks protected
 *	But hold on there are some interesting stuff here. Let's summarize the code :
 	-	`fgets()` a string
 	-	uses `printf()` to instantly print it out
