@@ -7,8 +7,9 @@ void v(void)
   if (m == 0x40) {
     fwrite("Wait what?!\n",1,0xc,stdout);
     system("/bin/sh");
+  }
+  return;
 }
-return;
 
 void main(void)
 {
