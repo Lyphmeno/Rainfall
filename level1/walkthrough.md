@@ -3,14 +3,10 @@ level1
 
 *	We spawn with a [level1](source/level1) executable
 	```console
-	level1@RainFall:~$ ls -l
-	total 732
 	level1@RainFall:~$ ls -l 
 	total 8
 	-rwsr-s---+ 1 level2 users 5138 Mar  6  2016 level1
 	level1@RainFall:~$ ./level1
-	█
-	level1@RainFall:~$ ./level1 test
 	█
 	```
 	`./level1` is execute as `level2` user
