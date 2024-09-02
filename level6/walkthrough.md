@@ -11,7 +11,7 @@ level6
 	level6@RainFall:~$ ./level6 test
 	Nope
 	```
-*	Let's look at the [code](source/level6.c) :
+*	Let's look at the [code](source/level6.c):
 	- `main` takes a string as argument and then:	
 		- `malloc dest[64]`
 		- `malloc ppcVar1[4]`
