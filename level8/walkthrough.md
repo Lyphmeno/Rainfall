@@ -1,7 +1,7 @@
 level8
 ======
 
-*	We spawn with a [level8](source/level8) executable
+*	We spawn with a [level8](src/level8) executable
 	```console
 	level8@RainFall:~$ ls -l 
 	total 8
@@ -12,7 +12,7 @@ level8
 	(nil), (nil) 
 	test
 	```
-*	Using ghidra on the program made me sick, this is the [base code](source/level8.c), but I tried to make it more readable for the sake of the correction, here is the [better code](source/level8_better.c). Let's review it :
+*	Using ghidra on the program made me sick, this is the [base code](src/level8.c), but I tried to make it more readable for the sake of the correction, here is the [better code](src/level8_better.c). Let's review it :
 	-	Infinite loop that takes two inputs `fgets` with a `BUFFER_SIZE=128`
 		-	`printf` addresses of `auth` and `service`
 		-	`return 0` if wrong input

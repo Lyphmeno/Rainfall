@@ -1,7 +1,7 @@
 level1
 ======
 
-*	We spawn with a [level1](source/level1) executable
+*	We spawn with a [level1](src/level1) executable
 	```console
 	level1@RainFall:~$ ls -l 
 	total 8
@@ -12,7 +12,7 @@ level1
 	`./level1` is execute as `level2` user
 *	It is reading on `STDIN`
 *	From now on I will be using [Ghidra](https://ghidra-sre.org/) as a decompiler even tho I made a small script to disassemble our programs
-*	Let's take a look at the [code](./source/level1.c)
+*	Let's take a look at the [code](./src/level1.c)
 *	The `main` declares a variable of `76` bytes on the stack and executes `gets()` on it
 *	We also have another function called `run()` (which is never called btw) :
 	-	execute `fwrite()` with and string on STDOUT

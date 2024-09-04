@@ -1,7 +1,7 @@
 level4
 ======
 
-*	We spawn with a [level4](source/level4) executable
+*	We spawn with a [level4](src/level4) executable
 	```console
 	level4@RainFall:~$ ls -l 
 	total 8
@@ -12,7 +12,7 @@ level4
 	dsadasd
 	dsadasd
 	```
-*	Let's take a look at the [code](source/level4.c)
+*	Let's take a look at the [code](src/level4.c)
 	```console
 	root@DESKTOP-69N2SL4:~# scp -P 4242 level4@192.168.29.4:~/level4 .
 	root@DESKTOP-69N2SL4:~# ./getFunctions.sh 
@@ -20,7 +20,7 @@ level4
 	[1] ./level4
 	Enter the number of the executable file you want to analyze: 1
 	```
-*	It seems there is 3 functions -> `main`, `p` and `n`. Even though the code isn't complex, for understanding purposes, I'll use ghidra to convert it to `C` in [level4.c](source/level4.c)
+*	It seems there is 3 functions -> `main`, `p` and `n`. Even though the code isn't complex, for understanding purposes, I'll use ghidra to convert it to `C` in [level4.c](src/level4.c)
 *	To summarize :
 	-	`main` calls function `n` then return 
 	-	`n` function uses `fgets` and calls `printf` with `p` on what you gave

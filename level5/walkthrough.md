@@ -1,7 +1,7 @@
 level5
 ======
 
-*	We spawn with a [level5](source/level5) executable
+*	We spawn with a [level5](src/level5) executable
 	```console
 	level5@RainFall:~$ ls -l 
 	total 8
@@ -13,7 +13,7 @@ level5
 	qweqweqwe
 	qweqweqwe
 	```
-*	We have 3 functions ([code here](source/level5.c)):
+*	We have 3 functions ([code here](src/level5.c)):
 	-	`main` calling `n`
 	-	`n` creates a 520 bytes variable, `fgets` on it and then `printf` it
 	-	`o` calls `/bin/sh``

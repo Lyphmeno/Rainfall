@@ -1,7 +1,7 @@
 level0
 ======
 
-*	We spawn with a [level0](source/level0) executable
+*	We spawn with a [level0](src/level0) executable
 	```console
 	level0@RainFall:~$ ls -l
 	total 732
@@ -16,7 +16,7 @@ level0
 	root@DESKTOP-69N2SL4:~# scp -P 4242 level0@192.168.29.4:~/level0 .
 	root@DESKTOP-69N2SL4:~# ./getFunctions.sh
 	```
-	My [getFunctions](source/getFunctions.sh) script will allow me to get the [disas](source/disas.s)
+	My [getFunctions](src/getFunctions.sh) script will allow me to get the [disas](src/disas.s)
 *	In this part we can see the program uses `atoi` on the argument we gave him and then `cmp` with `423` in hexadecimal
 	```assembly
 	mov    %eax,(%esp)

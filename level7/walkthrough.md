@@ -1,7 +1,7 @@
 level7
 ======
 
-*	We spawn with a [level7](source/level7) executable
+*	We spawn with a [level7](src/level7) executable
 	```console
 	level7@RainFall:~$ ls -l 
 	total 8
@@ -14,7 +14,7 @@ level7
 	~~
 	level7@RainFall:~$ 
 	```
-*	Let's look at the [code](source/level7.c) (I changed the name of some variable for the sake of my mental health):
+*	Let's look at the [code](src/level7.c) (I changed the name of some variable for the sake of my mental health):
 	-	`main()` takes two arguments and then:
 		-	two array and one normal var:
 			-	`arr1` and `arr2` are both `malloc(8)`

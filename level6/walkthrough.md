@@ -1,7 +1,7 @@
 level6
 ======
 
-*	We spawn with a [level6](source/level6) executable
+*	We spawn with a [level6](src/level6) executable
 	```console
 	level6@RainFall:~$ ls -l 
 	total 8
@@ -11,7 +11,7 @@ level6
 	level6@RainFall:~$ ./level6 test
 	Nope
 	```
-*	Let's look at the [code](source/level6.c):
+*	Let's look at the [code](src/level6.c):
 	- `main` takes a string as argument and then:	
 		- `malloc dest[64]`
 		- `malloc ppcVar1[4]`

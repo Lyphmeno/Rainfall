@@ -1,7 +1,7 @@
 level2
 ======
 
-*	We spawn with a [level2](source/level2) executable
+*	We spawn with a [level2](src/level2) executable
 	```console
 	level2@RainFall:~$ ls -l 
 	total 8
