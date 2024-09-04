@@ -30,7 +30,7 @@ level6
 	malloc(64)         = 0x0804a008
 	malloc(4)          = 0x0804a050
 	```
-	They do go one after the other and have a `0x48(HEX)` -> `72(DEC)` bytes difference [64 + 4 + address(4) = 72]
+	They do go one after the other and have a `0x48(HEX)` -> `72(DEC)` bytes difference
 *	Now we need the address of `n`
 	```gdb 
 	(gdb) x n 
