@@ -2,16 +2,16 @@
 #include <string.h>
 #include <unistd.h>
 
-void processInput(char *output) {
+void processInput(char *result) {
 	char tempInput1[20];
 	char tempInput2[20];
 	readInput(tempInput1, "Enter first string:");
 	readInput(tempInput2, "Enter second string:");
-	strcpy(output, tempInput1);
-	size_t length = strlen(output);
-	output[length] = ' ';
-	output[length + 1] = '\0';
-	strcat(output, tempInput2);
+	strcpy(result, tempInput1);
+	size_t length = strlen(result);
+	result[length] = ' ';
+	result[length + 1] = '\0';
+	strcat(result, tempInput2);
 }
 
 void readInput(char *buffer, char *prompt) {
