@@ -14,7 +14,7 @@ To do so you have to cat the file corresponding to the password of the next user
 
 Exemple :
 ```console
-level00@SnowCrash:~$ *exploit giving a shell*
+level0@Rainfall:~$ *exploit giving a shell*
 $ whoami
 level1
 $ cat /home/user/level1/.pass
